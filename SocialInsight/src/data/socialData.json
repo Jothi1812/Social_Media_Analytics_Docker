@@ -1,0 +1,27 @@
+{
+  "userEngagement": [
+    { "platform": "Twitter", "likes": 500, "comments": 120, "shares": 90 },
+    { "platform": "Instagram", "likes": 800, "comments": 200, "shares": 150 },
+    { "platform": "Facebook", "likes": 300, "comments": 80, "shares": 60 },
+    { "platform": "LinkedIn", "likes": 250, "comments": 95, "shares": 70 },
+    { "platform": "YouTube", "likes": 1200, "comments": 500, "shares": 300 },
+    { "platform": "TikTok", "likes": 1500, "comments": 400, "shares": 250 },
+    { "platform": "Pinterest", "likes": 350, "comments": 100, "shares": 80 },
+    { "platform": "Reddit", "likes": 600, "comments": 300, "shares": 200 }
+  ],
+
+  "userGrowth": [
+    { "month": "January", "newUsers": 500 },
+    { "month": "February", "newUsers": 700 },
+    { "month": "March", "newUsers": 650 },
+    { "month": "April", "newUsers": 800 },
+    { "month": "May", "newUsers": 900 },
+    { "month": "June", "newUsers": 1000 },
+    { "month": "July", "newUsers": 1100 },
+    { "month": "August", "newUsers": 950 },
+    { "month": "September", "newUsers": 1200 },
+    { "month": "October", "newUsers": 1300 },
+    { "month": "November", "newUsers": 1150 },
+    { "month": "December", "newUsers": 1400 }
+  ]
+}

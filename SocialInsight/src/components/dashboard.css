@@ -1,0 +1,137 @@
+/* Main Container Styling */
+.user-growth-container {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Layout for User Growth Cards */
+.user-growth-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Individual Card Styling */
+.growth-card {
+  width: 200px;
+  background: linear-gradient(135deg, #ffffff, #f8f8f8);
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #333;
+  font-family: "Arial", sans-serif;
+}
+
+.growth-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+  background-color: #e6f7ff;
+}
+
+/* Text Animation for Card Titles */
+.dynamic-text {
+  font-weight: bold;
+  animation: colorShift 2s infinite;
+}
+
+/* Animated Counter */
+.count-number {
+  animation: countUp 0.5s ease-in-out forwards;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Running Text for Inside Cards */
+@keyframes textScroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scrolling-text {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.scrolling-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: textScroll 8s linear infinite;
+}
+/* Modal Chart Container */
+.chart-container {
+  text-align: center;
+  padding: 20px;
+}
+/* Modal Chart Container */
+.chart-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.chart-donut-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Styling for the chart hover effect */
+.chart-donut-container:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Modal Styling */
+.modal-content {
+  background-color: #f4f4f9;
+  border-radius: 10px;
+}
+
+.modal-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.chart-container svg {
+  animation: bounce 1s ease infinite alternate;
+}
+
+/* Bounce Animation for Chart Icon */
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Card Entry Animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-card {
+  animation: slideUp 0.6s ease-in-out;
+}
