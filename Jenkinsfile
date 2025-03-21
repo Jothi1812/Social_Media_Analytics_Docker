@@ -20,7 +20,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 script {
-                    git branch: 'main', 
+                    git branch: 'main',
                         credentialsId: 'github_seccred',
                         url: 'https://github.com/Jothi1812/Social_Media_Analytics_Docker.git'
                 }
@@ -31,14 +31,18 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    cd SocialInsight
-                    
-                    if [ -f package.json ]; then
-                        echo "package.json found. Running npm install..."
-                        npm install
-                        npm run build
+                    if [ -d "SocialInsight" ]; then
+                        cd SocialInsight
+                        if [ -f package.json ]; then
+                            echo "package.json found. Running npm install..."
+                            npm install
+                            npm run build
+                        else
+                            echo "ERROR: package.json is missing in SocialInsight. Skipping npm install."
+                            exit 1
+                        fi
                     else
-                        echo "ERROR: package.json is missing in task-manager. Skipping npm install."
+                        echo "ERROR: SocialInsight directory is missing."
                         exit 1
                     fi
                     '''
@@ -54,9 +58,7 @@ pipeline {
                         def tag = "social"
 
                         sh """
-                        cd SocialInsight
-                        docker build -t ${imageName} .
-                        docker tag ${imageName} ${imageName}:${tag}
+                        docker build -t ${imageName}:${tag} -f SocialInsight/Dockerfile .
                         docker push ${imageName}:${tag}
                         """
                     }
