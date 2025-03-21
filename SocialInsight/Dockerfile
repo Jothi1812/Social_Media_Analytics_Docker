@@ -5,13 +5,13 @@ FROM node:20 AS builder
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+COPY SocialInsight/package.json SocialInsight/package-lock.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the entire project into the container
-COPY . .
+COPY SocialInsight ./
 
 # Build the React Vite project
 RUN npm run build
@@ -23,7 +23,7 @@ FROM nginx:latest
 RUN rm -rf /etc/nginx/conf.d
 
 # Copy custom NGINX configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY SocialInsight/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the built React Vite files to NGINX's web directory
 COPY --from=builder /app/dist /usr/share/nginx/html
@@ -32,4 +32,4 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 3000
 
 # Start NGINX
-CMD ["nginx", "-g", "daemon off;"
+CMD ["nginx", "-g", "daemon off;"]
