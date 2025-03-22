@@ -67,24 +67,25 @@ pipeline {
         }
 
         stage('Deploy Docker Container') {
-            steps {
-                script {
-                    def containerName = "jothi-container"
-                    def imageName = "jothi1811/devops:social"
+    steps {
+        script {
+            def containerName = "jothi-container"
+            def imageName = "jothi1811/devops:social"
 
-                    // Stop and remove the existing container if running
-                    sh """
-                    docker stop ${containerName} || true
-                    docker rm ${containerName} || true
-                    """
+            // Stop and remove the existing container if running
+            sh """
+            docker stop ${containerName} || true
+            docker rm ${containerName} || true
+            """
 
-                    // Run the new container on port 3002
-                    sh """
-                    docker run -d --name ${containerName} -p 3002:3000 ${imageName}
-                    """
-                }
-            }
+            // Run the new container on the correct port
+            sh """
+            docker run -d --name ${containerName} -p 5173:80 ${imageName}
+            """
         }
+    }
+}
+
 
     }
 }
