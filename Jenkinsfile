@@ -21,8 +21,8 @@ pipeline {
             steps {
                 script {
                     git branch: 'main', 
-                        credentialsId: 'github_secret',
-                        url: 'https://github.com/Immanuvel1207/Full-stack-demo.git'
+                        credentialsId: 'github_seccred',
+                        url: 'https://github.com/Jothi1812/Social_Media_Analytics_Docker.git'
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    cd task-manager
+                    cd SocialInsight
                     
                     if [ -f package.json ]; then
                         echo "package.json found. Running npm install..."
@@ -50,11 +50,11 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        def imageName = "immanuvel12/task-manager"
-                        def tag = "latest"
+                        def imageName = "jothi1811/devops"
+                        def tag = "social"
 
                         sh """
-                        cd task-manager
+                        cd SocialInsight
                         docker build -t ${imageName} .
                         docker tag ${imageName} ${imageName}:${tag}
                         docker push ${imageName}:${tag}
@@ -67,8 +67,8 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-                    def containerName = "task_manager_container"
-                    def imageName = "immanuvel12/task-manager:latest"
+                    def containerName = "social_container"
+                    def imageName = "jothi1811/social:latest"
 
                     // Stop and remove the existing container if running
                     sh """
