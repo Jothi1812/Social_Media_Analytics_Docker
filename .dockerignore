@@ -1,0 +1,23 @@
+# Ignore node_modules to prevent copying dependencies
+SocialInsight/node_modules
+SocialInsight/.cache
+
+# Ignore build artifacts (they will be generated inside the container)
+SocialInsight/dist
+
+# Ignore local environment files
+SocialInsight/.env
+SocialInsight/.env.local
+SocialInsight/.env.development
+SocialInsight/.env.production
+
+# Ignore logs and system files
+SocialInsight/npm-debug.log
+SocialInsight/yarn-debug.log
+SocialInsight/yarn-error.log
+SocialInsight/pnpm-debug.log
+SocialInsight/.DS_Store
+
+# Ignore Git-related files
+.git
+.gitignore
