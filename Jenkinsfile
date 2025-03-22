@@ -1,72 +1,88 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "jothi1811/devops"
-        CONTAINER_NAME = "social_media_analytics_container"
-        PORT = "3003"
+    tools {
+        jdk 'jdk17'
+        nodejs 'node20'
     }
 
     stages {
-        stage('Clone Repository') {
+
+        stage('Clean Workspace') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github_seccred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/Jothi1812/Social_Media_Analytics_Docker.git'
+                    echo "Cleaning workspace..."
+                    deleteDir() // Deletes everything in the Jenkins workspace before starting
+                }
+            }
+        }
+
+        stage('Git Checkout') {
+            steps {
+                script {
+                    git branch: 'main', 
+                        credentialsId: 'github_secret',
+                        url: 'https://github.com/Jothi1812/Social_Media_Analytics_Docker.git'
+                }
+            }
+        }
+
+        stage('Install Dependencies & Build') {
+            steps {
+                script {
+                    sh '''
+                    cd SocialInsight
+                    
+                    if [ -f package.json ]; then
+                        echo "package.json found. Running npm install..."
+                        npm install
+                        npm run build
+                    else
+                        echo "ERROR: package.json is missing in task-manager. Skipping npm install."
+                        exit 1
+                    fi
+                    '''
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        def imageName = "jothi1811/devops"
+                        def tag = "latest"
+
+                        sh """
+                        cd SocialInsight
+                        docker build -t ${imageName} .
+                        docker tag ${imageName} ${imageName}:${tag}
+                        docker push ${imageName}:${tag}
+                        """
                     }
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Deploy Docker Container') {
             steps {
                 script {
-                    sh 'docker build -t $IMAGE_NAME .'
+                    def containerName = "social_container"
+                    def imageName = "jothi1811/devops:latest"
+
+                    // Stop and remove the existing container if running
+                    sh """
+                    docker stop ${containerName} || true
+                    docker rm ${containerName} || true
+                    """
+
+                    // Run the new container on port 3002
+                    sh """
+                    docker run -d --name ${containerName} -p 3002:3000 ${imageName}
+                    """
                 }
             }
         }
 
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    }
-                }
-            }
-        }
-
-        stage('Push Docker Image to Hub') {
-            steps {
-                script {
-                    sh 'docker push $IMAGE_NAME'
-                }
-            }
-        }
-
-        stage('Stop Existing Container') {
-            steps {
-                script {
-                    sh 'docker stop $CONTAINER_NAME || true'
-                    sh 'docker rm $CONTAINER_NAME || true'
-                }
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    sh 'docker run -d -p $PORT:80 --name $CONTAINER_NAME $IMAGE_NAME'
-                }
-            }
-        }
-
-        stage('Post-Deployment Check') {
-            steps {
-                script {
-                    sh 'docker ps | grep $CONTAINER_NAME'
-                }
-            }
-        }
     }
 }
