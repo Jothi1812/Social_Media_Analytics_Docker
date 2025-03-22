@@ -11,7 +11,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'git_seccred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'github_seccred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                         sh 'git clone https://${GIT_USER}:${GIT_PASS}@github.com/Jothi1812/Social_Media_Analytics_Docker.git'
                     }
                 }
