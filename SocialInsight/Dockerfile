@@ -1,24 +1,22 @@
 # Use Node.js as base image
-FROM node:18-alpine
+FROM node:18-alpine AS build
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the entire project
+# Copy project files and build the app
 COPY . .
-
-# Build the Vite app
 RUN npm run build
 
-# Use Nginx to serve the app
+# Use Nginx for serving static files
 FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Expose the correct port for Vite
+EXPOSE 5173
 
 CMD ["nginx", "-g", "daemon off;"]
