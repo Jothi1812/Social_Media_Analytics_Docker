@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Use NGINX as the production web server
-FROM nginx:latest
+FROM nginx:social
 
 # Remove the default NGINX configuration
 RUN rm -rf /etc/nginx/conf.d
