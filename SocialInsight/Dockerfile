@@ -1,35 +1,27 @@
-# Use Node.js to build the Vite app
-FROM node:20 AS builder
+# Use Node.js base image
+FROM node:18-alpine AS build
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files and install dependencies
 COPY package.json package-lock.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the entire project into the container
+# Copy the rest of the project
 COPY . .
 
-# Build the React Vite project
+# Build the Vite project
 RUN npm run build
 
-# Use NGINX as the production web server
-FROM nginx:latest
+# Use Nginx for serving the built files
+FROM nginx:alpine
 
-# Remove the default NGINX configuration
-RUN rm -rf /etc/nginx/conf.d
+# Copy built files to Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom NGINX configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Expose port
+EXPOSE 3003
 
-# Copy the built React Vite files to NGINX's web directory
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Expose port 3000
-EXPOSE 3000
-
-# Start NGINX
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
