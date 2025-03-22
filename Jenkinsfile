@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     def containerName = "social_container"
-                    def imageName = "jothi1811/social:latest"
+                    def imageName = "jothi1811/devops:social"
 
                     // Stop and remove the existing container if running
                     sh """
