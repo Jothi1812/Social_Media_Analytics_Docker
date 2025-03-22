@@ -20,9 +20,9 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 script {
-                    git branch: 'main',
-                        credentialsId: 'github_seccred',
-                        url: 'https://github.com/Jothi1812/Social_Media_Analytics_Docker.git'
+                    git branch: 'main', 
+                        credentialsId: 'github_secret',
+                        url: 'https://github.com/Immanuvel1207/Full-stack-demo.git'
                 }
             }
         }
@@ -31,18 +31,14 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    if [ -d "SocialInsight" ]; then
-                        cd SocialInsight
-                        if [ -f package.json ]; then
-                            echo "package.json found. Running npm install..."
-                            npm install
-                            npm run build
-                        else
-                            echo "ERROR: package.json is missing in SocialInsight. Skipping npm install."
-                            exit 1
-                        fi
+                    cd task-manager
+                    
+                    if [ -f package.json ]; then
+                        echo "package.json found. Running npm install..."
+                        npm install
+                        npm run build
                     else
-                        echo "ERROR: SocialInsight directory is missing."
+                        echo "ERROR: package.json is missing in task-manager. Skipping npm install."
                         exit 1
                     fi
                     '''
@@ -54,11 +50,13 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                        def imageName = "jothi1811/devops"
-                        def tag = "social"
+                        def imageName = "immanuvel12/task-manager"
+                        def tag = "latest"
 
                         sh """
-                        docker build -t ${imageName}:${tag} -f SocialInsight/Dockerfile .
+                        cd task-manager
+                        docker build -t ${imageName} .
+                        docker tag ${imageName} ${imageName}:${tag}
                         docker push ${imageName}:${tag}
                         """
                     }
@@ -67,25 +65,24 @@ pipeline {
         }
 
         stage('Deploy Docker Container') {
-    steps {
-        script {
-            def containerName = "jothi-container"
-            def imageName = "jothi1811/devops:social"
+            steps {
+                script {
+                    def containerName = "task_manager_container"
+                    def imageName = "immanuvel12/task-manager:latest"
 
-            // Stop and remove the existing container if running
-            sh """
-            docker stop ${containerName} || true
-            docker rm ${containerName} || true
-            """
+                    // Stop and remove the existing container if running
+                    sh """
+                    docker stop ${containerName} || true
+                    docker rm ${containerName} || true
+                    """
 
-            // Run the new container on the correct port
-            sh """
-            docker run -d --name ${containerName} -p 5173:80 ${imageName}
-            """
+                    // Run the new container on port 3002
+                    sh """
+                    docker run -d --name ${containerName} -p 3002:3000 ${imageName}
+                    """
+                }
+            }
         }
-    }
-}
-
 
     }
 }
